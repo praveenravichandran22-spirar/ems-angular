@@ -1,0 +1,94 @@
+<div class="page-container">
+
+  <!-- ── Header ─────────────────────────────────────────────────────────── -->
+  <div class="page-header">
+    <h2 class="page-title">
+      <i class="pi pi-users"></i> User Accounts
+      <span class="total-badge">{{ totalElements() }}</span>
+    </h2>
+  </div>
+
+  <!-- ── Filters ─────────────────────────────────────────────────────────── -->
+  <div class="filter-bar">
+    <p-iconfield class="search-field">
+      <p-inputicon styleClass="pi pi-search" />
+      <input pInputText
+             [ngModel]="keyword"
+             (ngModelChange)="onKeywordChange($event)"
+             placeholder="Search by name or email…"
+             class="search-input" />
+    </p-iconfield>
+
+    <p-select
+      [options]="roleOptions"
+      [(ngModel)]="roleFilter"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="All Roles"
+      [showClear]="true"
+      (onChange)="onRoleChange()"
+      styleClass="filter-select" />
+
+    <p-button icon="pi pi-filter-slash" severity="secondary" [outlined]="true"
+              (onClick)="onClear()" pTooltip="Clear filters" />
+  </div>
+
+  <!-- ── Table ───────────────────────────────────────────────────────────── -->
+  <p-table
+    [value]="users()"
+    [loading]="loading()"
+    [lazy]="true"
+    [paginator]="true"
+    [rows]="params.size"
+    [totalRecords]="totalElements()"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first}–{last} of {totalRecords} users"
+    [showJumpToPageInput]="true"
+    (onPage)="onPage($event)"
+    (onSort)="onSort($event)"
+    [sortField]="params.sortBy"
+    [sortOrder]="params.sortDir === 'asc' ? 1 : -1"
+    styleClass="p-datatable-striped p-datatable-sm"
+    [tableStyle]="{ 'min-width': '50rem' }">
+
+    <ng-template #header>
+      <tr>
+        <th pSortableColumn="firstName">Name <p-sortIcon field="firstName" /></th>
+        <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
+        <th pSortableColumn="role">Role <p-sortIcon field="role" /></th>
+        <th>Status</th>
+        <th pSortableColumn="createdAt">Registered <p-sortIcon field="createdAt" /></th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-user>
+      <tr>
+        <td class="name-cell">
+          <span>{{ user.firstName }} {{ user.lastName }}</span>
+        </td>
+        <td>{{ user.email }}</td>
+        <td>
+          <p-tag [value]="getRoleLabel(user.role)"
+                 [severity]="getRoleSeverity(user.role)" />
+        </td>
+        <td>
+          @if (user.enabled) {
+            <p-tag value="Active"   severity="success" />
+          } @else {
+            <p-tag value="Disabled" severity="secondary" />
+          }
+        </td>
+        <td>{{ user.createdAt | date:'dd MMM yyyy, HH:mm' }}</td>
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="5" class="empty-msg">No users found.</td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+
+</div>

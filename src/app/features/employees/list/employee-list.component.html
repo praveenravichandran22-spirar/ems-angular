@@ -1,0 +1,164 @@
+<div class="page-container">
+
+  <!-- ── Header ─────────────────────────────────────────────────────────── -->
+  <div class="page-header">
+    <h2 class="page-title">
+      <i class="pi pi-id-card"></i> Employees
+      <span class="total-badge">{{ total() }}</span>
+    </h2>
+    @if (isAdmin()) {
+      <p-button label="New Employee" icon="pi pi-plus" routerLink="/employees/new" />
+    }
+  </div>
+
+  <!-- ── Filters ─────────────────────────────────────────────────────────── -->
+  <div class="filter-bar">
+    <p-iconfield class="search-field">
+      <p-inputicon styleClass="pi pi-search" />
+      <input pInputText
+             [ngModel]="keyword"
+             (ngModelChange)="onKeywordChange($event)"
+             placeholder="Search by name or email…"
+             class="search-input" />
+    </p-iconfield>
+
+    <p-select
+      [options]="departments()"
+      [(ngModel)]="deptFilter"
+      optionLabel="name"
+      optionValue="id"
+      placeholder="All Departments"
+      [showClear]="true"
+      (onChange)="onSearch()"
+      styleClass="filter-select" />
+
+    <p-select
+      [options]="statuses()"
+      [(ngModel)]="statusFilter"
+      optionLabel="name"
+      optionValue="id"
+      placeholder="All Statuses"
+      [showClear]="true"
+      (onChange)="onSearch()"
+      styleClass="filter-select" />
+
+    <p-button icon="pi pi-filter-slash" severity="secondary" [outlined]="true"
+              (onClick)="onClear()" pTooltip="Clear filters" />
+  </div>
+
+  <!-- ── Table ───────────────────────────────────────────────────────────── -->
+  <p-table
+    [value]="employees()"
+    [loading]="loading()"
+    [lazy]="true"
+    [paginator]="true"
+    [rows]="params().size"
+    [totalRecords]="total()"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first}–{last} of {totalRecords} employees"
+    [showJumpToPageInput]="true"
+    (onPage)="onPage($event)"
+    (onSort)="onSort($event)"
+    [sortField]="params().sortBy"
+    [sortOrder]="params().sortDir === 'asc' ? 1 : -1"
+    styleClass="p-datatable-striped p-datatable-sm"
+    [tableStyle]="{ 'min-width': '60rem' }">
+
+    <ng-template #header>
+      <tr>
+        @if (isAdmin()) {
+          <th style="width:3rem"></th>
+        }
+        <th pSortableColumn="firstName">
+          Name <p-sortIcon field="firstName" />
+        </th>
+        <th pSortableColumn="email">
+          Email <p-sortIcon field="email" />
+        </th>
+        <th pSortableColumn="department.name">
+          Department <p-sortIcon field="department.name" />
+        </th>
+        <th>Status</th>
+        @if (isAdmin()) {
+          <th pSortableColumn="salary">
+            Salary <p-sortIcon field="salary" />
+          </th>
+          <th pSortableColumn="joiningDate">
+            Joining Date <p-sortIcon field="joiningDate" />
+          </th>
+        }
+        <th style="width:8rem">Actions</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-emp>
+      @if (!isAdminOwnRecord(emp.email)) {
+      <tr>
+        @if (isAdmin()) {
+          <td>
+            @if (emp.profileImageUrl) {
+              <p-avatar [image]="resolveFileUrl(emp.profileImageUrl)!" shape="circle" size="normal" />
+            } @else {
+              <p-avatar [label]="getInitials(emp.firstName, emp.lastName)" shape="circle" size="normal" styleClass="avatar-placeholder" />
+            }
+          </td>
+        }
+        <td>
+          <span class="emp-name">{{ emp.firstName }} {{ emp.lastName }}</span>
+          @if (emp.isRemote && isAdmin()) {
+            <span class="remote-badge">Remote</span>
+          }
+        </td>
+        <td>{{ emp.email }}</td>
+        <td>{{ emp.department?.name ?? '—' }}</td>
+        <td>
+          @if (emp.status) {
+            <p-tag [value]="emp.status.name" [severity]="getStatusSeverity(emp.status.name)" />
+          } @else {
+            <span class="text-muted">—</span>
+          }
+        </td>
+        @if (isAdmin()) {
+          <td>
+            <div class="salary-cell">
+              @if (emp.salary != null) {
+                <span class="salary-value">
+                  {{ isSalaryRevealed(emp.id) ? (emp.salary | number:'1.0-0') : '••••••' }}
+                </span>
+                <button class="salary-toggle"
+                        [title]="isSalaryRevealed(emp.id) ? 'Hide salary' : 'Show salary'"
+                        (click)="toggleSalary(emp.id, $event)">
+                  <i class="pi {{ isSalaryRevealed(emp.id) ? 'pi-eye-slash' : 'pi-eye' }}"></i>
+                </button>
+              } @else {
+                —
+              }
+            </div>
+          </td>
+          <td>{{ emp.joiningDate | date:'dd MMM yyyy' }}</td>
+        }
+        <td>
+          <div class="action-btns">
+            <p-button icon="pi pi-eye" severity="info" [text]="true" size="small" (onClick)="viewEmployee(emp.id)" pTooltip="View" />
+            @if (isAdmin()) {
+              <p-button icon="pi pi-pencil" severity="warn"   [text]="true" size="small" (onClick)="editEmployee(emp.id)" pTooltip="Edit" />
+              <p-button icon="pi pi-trash"  severity="danger" [text]="true" size="small" (onClick)="deleteEmployee(emp.id, emp.firstName + ' ' + emp.lastName)" pTooltip="Delete" />
+            }
+          </div>
+        </td>
+      </tr>
+      }
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td [attr.colspan]="isAdmin() ? 8 : 5" class="empty-msg">No employees found.</td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+
+</div>
+
+<p-confirmDialog />

@@ -1,0 +1,101 @@
+.page-container {
+  padding: 1.5rem;
+}
+
+.page-header {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  margin-bottom:   1.25rem;
+}
+
+.page-title {
+  font-size:   1.4rem;
+  font-weight: 600;
+  margin:      0;
+  display:     flex;
+  align-items: center;
+  gap:         0.5rem;
+
+  i { color: var(--p-primary-color); }
+}
+
+.total-badge {
+  font-size:        0.75rem;
+  font-weight:      600;
+  background:       var(--p-primary-color);
+  color:            #fff;
+  border-radius:    999px;
+  padding:          0.15rem 0.55rem;
+}
+
+.filter-bar {
+  display:       flex;
+  gap:           0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap:     wrap;
+  align-items:   center;
+}
+
+.search-field { flex: 1; min-width: 220px; }
+.search-input { width: 100%; }
+.filter-select { width: 200px; }
+
+.emp-name {
+  font-weight: 500;
+}
+
+.remote-badge {
+  font-size:     0.65rem;
+  background:    var(--p-primary-100);
+  color:         var(--p-primary-700);
+  border-radius: 4px;
+  padding:       2px 6px;
+  margin-left:   6px;
+  font-weight:   600;
+}
+
+.action-btns {
+  display:     flex;
+  gap:         0.15rem;
+  align-items: center;
+}
+
+.empty-msg {
+  text-align:  center;
+  color:       var(--p-text-muted-color);
+  padding:     2rem !important;
+}
+
+.text-muted { color: var(--p-text-muted-color); }
+
+.salary-cell {
+  display:     flex;
+  align-items: center;
+  gap:         0.4rem;
+}
+
+.salary-value {
+  font-variant-numeric: tabular-nums;
+  min-width: 4rem;
+  letter-spacing: 0.03em;
+}
+
+.salary-toggle {
+  background:  none;
+  border:      none;
+  cursor:      pointer;
+  padding:     0.15rem 0.25rem;
+  color:       var(--p-text-muted-color);
+  line-height: 1;
+  border-radius: 4px;
+  transition:  color 0.15s, background 0.15s;
+
+  &:hover {
+    color:       var(--p-primary-color);
+    background:  var(--p-primary-50, #f0f4ff);
+  }
+
+  i { font-size: 0.85rem; }
+}
+.avatar-placeholder { background: var(--p-primary-100); color: var(--p-primary-600); }

@@ -1,0 +1,28 @@
+@use "primeflex/primeflex.scss";
+@import "primeicons/primeicons.css";
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background: var(--surface-ground);
+  color: var(--text-color);
+  min-height: 100vh;
+}
+
+.page-container {
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.card-container {
+  background: var(--surface-card);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow);
+}

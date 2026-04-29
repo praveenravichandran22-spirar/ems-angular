@@ -1,0 +1,269 @@
+<div class="form-page">
+
+  <!-- ── Header ─────────────────────────────────────────────────────────────── -->
+  <div class="form-header">
+    <p-button icon="pi pi-arrow-left" [text]="true" severity="secondary" routerLink="/employees" />
+    <h2 class="form-title">
+      <i class="pi {{ isEditMode() ? 'pi-pencil' : 'pi-user-plus' }}"></i>
+      {{ isEditMode() ? 'Edit Employee' : 'New Employee' }}
+    </h2>
+  </div>
+
+  @if (loadingEmployee()) {
+    <div class="loading-overlay">
+      <p-progressspinner strokeWidth="4" />
+    </div>
+  } @else {
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+    <!-- ── Section 1: Personal Information ────────────────────────────────── -->
+    <div class="form-section">
+      <h3 class="section-title"><i class="pi pi-user"></i> Personal Information</h3>
+      <div class="form-grid">
+
+        <div class="field">
+          <label for="firstName">First Name <span class="required">*</span></label>
+          <input id="firstName" pInputText formControlName="firstName"
+                 placeholder="John" [class.ng-invalid]="hasError('firstName')" />
+          @if (hasError('firstName')) {
+            <small class="error-msg">{{ getError('firstName') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="lastName">Last Name <span class="required">*</span></label>
+          <input id="lastName" pInputText formControlName="lastName"
+                 placeholder="Doe" [class.ng-invalid]="hasError('lastName')" />
+          @if (hasError('lastName')) {
+            <small class="error-msg">{{ getError('lastName') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="email">Email <span class="required">*</span></label>
+          <input id="email" pInputText formControlName="email" type="email"
+                 placeholder="john.doe@example.com" [class.ng-invalid]="hasError('email')" />
+          @if (hasError('email')) {
+            <small class="error-msg">{{ getError('email') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="phone">Phone</label>
+          <input id="phone" pInputText formControlName="phone"
+                 placeholder="+1 555 000 0000"
+                 [class.ng-invalid]="hasError('phone')" />
+          @if (hasError('phone')) {
+            <small class="error-msg">{{ getError('phone') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label>Gender</label>
+          <div class="radio-group">
+            @for (opt of genderOptions; track opt.value) {
+              <div class="radio-option">
+                <p-radiobutton
+                  [inputId]="'gender_' + opt.value"
+                  [value]="opt.value"
+                  formControlName="gender" />
+                <label [for]="'gender_' + opt.value">{{ opt.label }}</label>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="dateOfBirth">Date of Birth</label>
+          <p-datepicker id="dateOfBirth" formControlName="dateOfBirth"
+            [showIcon]="true" dateFormat="dd/mm/yy"
+            [maxDate]="maxDob"
+            placeholder="DD/MM/YYYY"
+            styleClass="w-full" />
+        </div>
+
+      </div>
+    </div>
+
+    <p-divider />
+
+    <!-- ── Section 2: Employment Details ──────────────────────────────────── -->
+    <div class="form-section">
+      <h3 class="section-title"><i class="pi pi-briefcase"></i> Employment Details</h3>
+      <div class="form-grid">
+
+        <div class="field">
+          <label for="departmentId">Department</label>
+          <p-select id="departmentId"
+            [options]="departments()"
+            formControlName="departmentId"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Select department"
+            [showClear]="true"
+            styleClass="w-full" />
+        </div>
+
+        <div class="field">
+          <label for="statusId">Employment Status</label>
+          <p-select id="statusId"
+            [options]="statuses()"
+            formControlName="statusId"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Select status"
+            [showClear]="true"
+            styleClass="w-full" />
+        </div>
+
+        <div class="field">
+          <label for="joiningDate">Joining Date <span class="required">*</span></label>
+          <p-datepicker id="joiningDate" formControlName="joiningDate"
+            [showIcon]="true" dateFormat="dd/mm/yy"
+            placeholder="DD/MM/YYYY"
+            [class.ng-invalid]="hasError('joiningDate')"
+            styleClass="w-full" />
+          @if (hasError('joiningDate')) {
+            <small class="error-msg">{{ getError('joiningDate') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="salary">Salary</label>
+          <p-inputnumber id="salary" formControlName="salary"
+            mode="decimal" [useGrouping]="true" [min]="0"
+            placeholder="e.g. 60000" styleClass="w-full" />
+        </div>
+
+        <div class="field">
+          <label for="experienceYears">Experience (years)</label>
+          <p-inputnumber id="experienceYears" formControlName="experienceYears"
+            [min]="0" [max]="50" [showButtons]="true"
+            placeholder="0" styleClass="w-full" />
+        </div>
+
+        <div class="field field-inline">
+          <label>Remote Worker</label>
+          <div class="toggle-row">
+            <p-toggleswitch formControlName="isRemote" />
+            <span class="toggle-label">{{ form.get('isRemote')?.value ? 'Yes' : 'No' }}</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <p-divider />
+
+    <!-- ── Section 3: Additional Information ──────────────────────────────── -->
+    <div class="form-section">
+      <h3 class="section-title"><i class="pi pi-info-circle"></i> Additional Information</h3>
+      <div class="form-grid">
+
+        <div class="field field-full">
+          <label for="address">Address</label>
+          <textarea id="address" pTextarea formControlName="address"
+                    rows="2" placeholder="Street, City, Country"></textarea>
+        </div>
+
+        <div class="field field-full">
+          <label for="bio">Bio</label>
+          <textarea id="bio" pTextarea formControlName="bio"
+                    rows="3" placeholder="Short bio or notes about the employee"></textarea>
+        </div>
+
+        <div class="field">
+          <label>Rating</label>
+          <p-rating formControlName="rating" [stars]="5" />
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Section 4: Files ────────────────────────────────────────────────── -->
+    <p-divider />
+    <div class="form-section">
+      <h3 class="section-title"><i class="pi pi-paperclip"></i> Files</h3>
+      @if (!isEditMode()) {
+        <p class="files-hint">
+          <i class="pi pi-info-circle"></i>
+          Selected files will be uploaded automatically when the employee is created.
+        </p>
+      }
+      <div class="files-grid">
+
+        <!-- Profile Image -->
+        <div class="file-card">
+          <div class="file-card-header">
+            <i class="pi pi-image"></i>
+            <span>Profile Image</span>
+          </div>
+          @if (currentProfileImageUrl()) {
+            <img [src]="currentProfileImageUrl()!" alt="Profile" class="profile-preview" />
+          } @else {
+            <div class="no-file">No image uploaded</div>
+          }
+          <div class="file-input-row">
+            <input #imgInput type="file" accept="image/*" hidden
+                   (change)="onProfileImageChange($event)" />
+            <p-button label="Choose Image" icon="pi pi-folder-open" severity="secondary"
+                      [outlined]="true" size="small" (onClick)="imgInput.click()" />
+            @if (profileImageFileName) {
+              <span class="file-name">{{ profileImageFileName }}</span>
+            }
+          </div>
+          @if (isEditMode()) {
+            <p-button label="Upload" icon="pi pi-upload" size="small"
+                      [loading]="uploadingImage()"
+                      [disabled]="!selectedProfileImage"
+                      (onClick)="uploadProfileImage()" />
+          }
+        </div>
+
+        <!-- Resume -->
+        <div class="file-card">
+          <div class="file-card-header">
+            <i class="pi pi-file-pdf"></i>
+            <span>Resume / CV</span>
+          </div>
+          @if (currentResumeUrl()) {
+            <a [href]="currentResumeUrl()!" target="_blank" class="resume-link">
+              <i class="pi pi-external-link"></i> View current resume
+            </a>
+          } @else {
+            <div class="no-file">No resume uploaded</div>
+          }
+          <div class="file-input-row">
+            <input #resumeInput type="file" accept=".pdf,.doc,.docx" hidden
+                   (change)="onResumeChange($event)" />
+            <p-button label="Choose File" icon="pi pi-folder-open" severity="secondary"
+                      [outlined]="true" size="small" (onClick)="resumeInput.click()" />
+            @if (resumeFileName) {
+              <span class="file-name">{{ resumeFileName }}</span>
+            }
+          </div>
+          @if (isEditMode()) {
+            <p-button label="Upload" icon="pi pi-upload" size="small"
+                      [loading]="uploadingResume()"
+                      [disabled]="!selectedResume"
+                      (onClick)="uploadResume()" />
+          }
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Actions ─────────────────────────────────────────────────────────── -->
+    <div class="form-actions">
+      <p-button label="Cancel" icon="pi pi-times" severity="secondary"
+                [outlined]="true" routerLink="/employees" />
+      <p-button type="submit"
+                [label]="isEditMode() ? 'Update Employee' : 'Create Employee'"
+                icon="pi pi-check"
+                [loading]="saving()" />
+    </div>
+
+  </form>
+  }
+
+</div>

@@ -1,0 +1,122 @@
+.shell-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ── Navbar ────────────────────────────────────────────────────────────── */
+.navbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 1.5rem;
+  height: 60px;
+  background: var(--surface-card);
+  border-bottom: 1px solid var(--surface-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  min-width: 200px;
+
+  .brand-icon {
+    font-size: 1.4rem;
+    color: var(--primary-color);
+  }
+
+  .brand-text {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-color);
+    letter-spacing: 0.02em;
+  }
+}
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 6px;
+  color: var(--text-color-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: var(--surface-hover);
+    color: var(--text-color);
+  }
+
+  &.active {
+    background: var(--primary-50, #eff6ff);
+    color: var(--primary-color);
+    font-weight: 600;
+  }
+
+  .pi { font-size: 0.875rem; }
+}
+
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+
+  .user-avatar {
+    background: var(--primary-color);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.8rem;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .user-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-color);
+    white-space: nowrap;
+  }
+}
+
+/* ── Loading bar ────────────────────────────────────────────────────────── */
+.loading-bar {
+  height: 3px;
+  background: var(--surface-border);
+  overflow: hidden;
+
+  .loading-bar-fill {
+    height: 100%;
+    background: var(--primary-color);
+    animation: loading-slide 1.2s ease-in-out infinite;
+    width: 40%;
+  }
+}
+
+@keyframes loading-slide {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(350%); }
+}
+
+/* ── Main content ───────────────────────────────────────────────────────── */
+.main-content {
+  flex: 1;
+  padding: 1.5rem;
+  background: var(--surface-ground);
+}

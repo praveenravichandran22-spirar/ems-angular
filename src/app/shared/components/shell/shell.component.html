@@ -1,0 +1,68 @@
+<p-toast position="top-right" [life]="4000" />
+
+<div class="shell-wrapper">
+
+  <!-- ── Navbar ────────────────────────────────────────────────────────── -->
+  <header class="navbar">
+    <div class="navbar-brand">
+      <i class="pi pi-users brand-icon"></i>
+      <span class="brand-text">Employee Management</span>
+    </div>
+
+    <nav class="navbar-nav">
+      <a class="nav-link"
+         routerLink="/employees"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: false }">
+        <i class="pi pi-id-card"></i>
+        Employees
+      </a>
+
+      @if (isAdmin()) {
+        <a class="nav-link"
+           routerLink="/admin/users"
+           routerLinkActive="active">
+          <i class="pi pi-users"></i>
+          Users
+        </a>
+      }
+
+      <a class="nav-link"
+         routerLink="/sim"
+         routerLinkActive="active">
+        <i class="pi pi-database"></i>
+        Dataset Sim
+      </a>
+
+    </nav>
+
+    <div class="navbar-user">
+      <p-avatar
+        [label]="fullName().charAt(0)"
+        shape="circle"
+        styleClass="user-avatar" />
+      <span class="user-name">{{ fullName() }}</span>
+      <p-divider layout="vertical" />
+      <p-button
+        label="Logout"
+        icon="pi pi-sign-out"
+        severity="secondary"
+        [text]="true"
+        size="small"
+        (onClick)="logout()" />
+    </div>
+  </header>
+
+  <!-- ── Loading bar ────────────────────────────────────────────────────── -->
+  @if (loading.isLoading()) {
+    <div class="loading-bar">
+      <div class="loading-bar-fill"></div>
+    </div>
+  }
+
+  <!-- ── Main content ───────────────────────────────────────────────────── -->
+  <main class="main-content">
+    <router-outlet />
+  </main>
+
+</div>

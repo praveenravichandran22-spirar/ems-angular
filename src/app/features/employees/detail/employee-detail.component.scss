@@ -1,0 +1,276 @@
+.detail-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+// ── Header ─────────────────────────────────────────────────────────────────
+
+.detail-header {
+  display:         flex;
+  align-items:     center;
+  gap:             0.75rem;
+  margin-bottom:   1.5rem;
+}
+
+.detail-title {
+  font-size:   1.3rem;
+  font-weight: 600;
+  margin:      0;
+  flex:        1;
+  color:       var(--p-text-color);
+}
+
+.header-actions {
+  display: flex;
+  gap:     0.5rem;
+}
+
+// ── Profile hero ───────────────────────────────────────────────────────────
+
+.profile-hero {
+  display:     flex;
+  gap:         2rem;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.profile-avatar-wrap {
+  flex-shrink: 0;
+}
+
+.profile-img {
+  width:         110px;
+  height:        110px;
+  border-radius: 50%;
+  object-fit:    cover;
+  border:        3px solid var(--p-primary-color);
+}
+
+:host ::ng-deep .hero-avatar {
+  width:       110px !important;
+  height:      110px !important;
+  font-size:   2.5rem !important;
+  background:  var(--p-primary-100);
+  color:       var(--p-primary-600);
+}
+
+.profile-hero-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.employee-name {
+  font-size:   1.8rem;
+  font-weight: 700;
+  margin:      0 0 0.6rem;
+  color:       var(--p-text-color);
+  display:     flex;
+  align-items: center;
+  flex-wrap:   wrap;
+  gap:         0.5rem;
+}
+
+.hero-meta {
+  display:     flex;
+  align-items: center;
+  gap:         0.6rem;
+  margin-bottom: 1rem;
+  flex-wrap:   wrap;
+}
+
+.dept-chip {
+  font-size:     0.85rem;
+  background:    var(--p-surface-100, #f3f4f6);
+  border:        1px solid var(--p-surface-border, #e5e7eb);
+  border-radius: 999px;
+  padding:       0.2rem 0.75rem;
+  display:       flex;
+  align-items:   center;
+  gap:           0.35rem;
+  color:         var(--p-text-muted-color);
+
+  i { font-size: 0.75rem; }
+}
+
+.remote-pill {
+  font-size:     0.7rem;
+  font-weight:   700;
+  background:    var(--p-primary-100);
+  color:         var(--p-primary-700);
+  border-radius: 999px;
+  padding:       0.15rem 0.6rem;
+  letter-spacing: 0.04em;
+}
+
+// ── Hero stats ─────────────────────────────────────────────────────────────
+
+.hero-stats {
+  display:   flex;
+  gap:       2rem;
+  flex-wrap: wrap;
+}
+
+.stat {
+  display:        flex;
+  flex-direction: column;
+  align-items:    flex-start;
+  gap:            0.15rem;
+
+  i {
+    color:     var(--p-primary-color);
+    font-size: 0.8rem;
+  }
+
+  span {
+    font-size:   1rem;
+    font-weight: 600;
+    color:       var(--p-text-color);
+  }
+
+  label {
+    font-size: 0.72rem;
+    color:     var(--p-text-muted-color);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &.stat-rating {
+    gap: 0.2rem;
+  }
+}
+
+// ── Detail grid ────────────────────────────────────────────────────────────
+
+.detail-grid {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   1.25rem;
+  margin-bottom:         1.25rem;
+}
+
+.info-card {
+  background:    var(--p-surface-card, #fff);
+  border:        1px solid var(--p-surface-border, #e5e7eb);
+  border-radius: 10px;
+  padding:       1.1rem 1.25rem;
+}
+
+.card-title {
+  font-size:      0.8rem;
+  font-weight:    700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color:          var(--p-text-muted-color);
+  margin:         0 0 0.9rem;
+  display:        flex;
+  align-items:    center;
+  gap:            0.4rem;
+
+  i { color: var(--p-primary-color); }
+}
+
+.info-rows {
+  display:        flex;
+  flex-direction: column;
+  gap:            0.6rem;
+}
+
+.info-row {
+  display:     flex;
+  align-items: baseline;
+  gap:         0.5rem;
+}
+
+.info-label {
+  font-size:   0.8rem;
+  font-weight: 500;
+  color:       var(--p-text-muted-color);
+  min-width:   110px;
+  flex-shrink: 0;
+}
+
+.info-value {
+  font-size: 0.9rem;
+  color:     var(--p-text-color);
+  word-break: break-word;
+}
+
+.link {
+  color:           var(--p-primary-color);
+  text-decoration: none;
+  display:         inline-flex;
+  align-items:     center;
+  gap:             0.25rem;
+
+  &:hover { text-decoration: underline; }
+}
+
+// ── Bio ────────────────────────────────────────────────────────────────────
+
+.bio-card {
+  background:    var(--p-surface-card, #fff);
+  border:        1px solid var(--p-surface-border, #e5e7eb);
+  border-radius: 10px;
+  padding:       1.1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.bio-text {
+  font-size:   0.9rem;
+  line-height: 1.7;
+  color:       var(--p-text-color);
+  margin:      0;
+  white-space: pre-wrap;
+}
+
+// ── Timestamps ─────────────────────────────────────────────────────────────
+
+.timestamps {
+  display:   flex;
+  gap:       1.5rem;
+  font-size: 0.75rem;
+  color:     var(--p-text-muted-color);
+  flex-wrap: wrap;
+}
+
+// ── Loading / Error states ─────────────────────────────────────────────────
+
+.center-spinner {
+  display:         flex;
+  justify-content: center;
+  padding:         4rem 0;
+}
+
+.error-state {
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  gap:             1rem;
+  padding:         4rem 0;
+  color:           var(--p-text-muted-color);
+  text-align:      center;
+
+  i {
+    font-size: 3rem;
+    color:     var(--p-red-400, #f87171);
+  }
+
+  p { margin: 0; font-size: 1.1rem; }
+}
+
+// ── Responsive ─────────────────────────────────────────────────────────────
+
+@media (max-width: 640px) {
+  .profile-hero {
+    flex-direction: column;
+    align-items:    center;
+    text-align:     center;
+  }
+
+  .employee-name { justify-content: center; }
+  .hero-meta     { justify-content: center; }
+  .hero-stats    { justify-content: center; }
+
+  .detail-grid { grid-template-columns: 1fr; }
+}

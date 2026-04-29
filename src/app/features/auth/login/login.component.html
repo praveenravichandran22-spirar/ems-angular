@@ -1,0 +1,66 @@
+<div class="auth-page">
+  <p-card styleClass="auth-card">
+
+    <ng-template #header>
+      <div class="auth-header">
+        <i class="pi pi-users auth-icon"></i>
+        <h1 class="auth-title">Employee Management</h1>
+        <p class="auth-subtitle">Sign in to your account</p>
+      </div>
+    </ng-template>
+
+    @if (error()) {
+      <p-message severity="error" [text]="error()!" styleClass="w-full mb-3" />
+    }
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          pInputText
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="Email"
+          [class.ng-invalid]="isInvalid('email')"
+          class="w-full" />
+        @if (isInvalid('email')) {
+          <small class="field-error">Please enter a valid email.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <p-password
+          inputId="password"
+          formControlName="password"
+          placeholder="Password"
+          [feedback]="false"
+          [toggleMask]="true"
+          [class.ng-invalid]="isInvalid('password')"
+          styleClass="w-full"
+          inputStyleClass="w-full" />
+        @if (isInvalid('password')) {
+          <small class="field-error">This field is required.</small>
+        }
+      </div>
+
+      <p-button
+        type="submit"
+        label="Sign In"
+        icon="pi pi-sign-in"
+        [loading]="loading()"
+        styleClass="w-full mt-2" />
+
+    </form>
+
+    <ng-template #footer>
+      <p class="auth-footer-text">
+        Don't have an account?
+        <a routerLink="/auth/register">Register</a>
+      </p>
+    </ng-template>
+
+  </p-card>
+</div>
