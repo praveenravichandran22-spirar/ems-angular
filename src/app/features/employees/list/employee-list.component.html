@@ -79,6 +79,9 @@
         <th pSortableColumn="department.name">
           Department <p-sortIcon field="department.name" />
         </th>
+        <th pSortableColumn="country.countryName">
+          Country <p-sortIcon field="country.countryName" />
+        </th>
         <th>Status</th>
         @if (isAdmin()) {
           <th pSortableColumn="salary">
@@ -112,6 +115,7 @@
         </td>
         <td>{{ emp.email }}</td>
         <td>{{ emp.department?.name ?? '—' }}</td>
+        <td>{{ emp.country?.countryName ?? '—' }}</td>
         <td>
           @if (emp.status) {
             <p-tag [value]="emp.status.name" [severity]="getStatusSeverity(emp.status.name)" />

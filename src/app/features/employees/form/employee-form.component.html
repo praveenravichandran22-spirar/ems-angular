@@ -117,6 +117,18 @@
         </div>
 
         <div class="field">
+          <label for="countryId">Country</label>
+          <p-select id="countryId"
+            [options]="countries()"
+            formControlName="countryId"
+            optionLabel="countryName"
+            optionValue="id"
+            placeholder="Select country"
+            [showClear]="true"
+            styleClass="w-full" />
+        </div>
+
+        <div class="field">
           <label for="joiningDate">Joining Date <span class="required">*</span></label>
           <p-datepicker id="joiningDate" formControlName="joiningDate"
             [showIcon]="true" dateFormat="dd/mm/yy"
@@ -234,7 +246,7 @@
             <div class="no-file">No resume uploaded</div>
           }
           <div class="file-input-row">
-            <input #resumeInput type="file" accept=".pdf,.doc,.docx" hidden
+            <input #resumeInput type="file" accept=".pdf" hidden
                    (change)="onResumeChange($event)" />
             <p-button label="Choose File" icon="pi pi-folder-open" severity="secondary"
                       [outlined]="true" size="small" (onClick)="resumeInput.click()" />

@@ -21,7 +21,7 @@ import { Tooltip } from 'primeng/tooltip';
 
 import { employeeActions }                                                   from '../../../store/employee/employee.actions';
 import { selectEmployees, selectLoading, selectParams, selectTotalElements } from '../../../store/employee/employee.selectors';
-import { selectDepartments, selectStatuses }                                 from '../../../store/lookup/lookup.selectors';
+import { selectDepartments, selectStatuses, selectCountries }                                 from '../../../store/lookup/lookup.selectors';
 import { selectIsAdmin, selectCurrentUserEmail }                              from '../../../store/auth/auth.selectors';
 import { APP_ROUTES }                                                        from '../../../core/constants/app.constants';
 import { resolveFileUrl }                                                    from '../../../core/constants/api.constants';
@@ -46,12 +46,14 @@ export class EmployeeListComponent implements OnInit {
   readonly params      = toSignal(this.store.select(selectParams),         { initialValue: { page: 0, size: 10, sortBy: 'firstName', sortDir: 'asc' as const } });
   readonly departments = toSignal(this.store.select(selectDepartments),    { initialValue: [] });
   readonly statuses    = toSignal(this.store.select(selectStatuses),       { initialValue: [] });
+  readonly countries   = toSignal(this.store.select(selectCountries),      { initialValue: [] });
   readonly isAdmin            = toSignal(this.store.select(selectIsAdmin),            { initialValue: false });
   readonly currentUserEmail   = toSignal(this.store.select(selectCurrentUserEmail),   { initialValue: null });
 
   keyword      = '';
   deptFilter:   number | null = null;
   statusFilter: number | null = null;
+  countryFilter: number | null = null;
 
   revealedSalaries = new Set<number>();
 
@@ -106,6 +108,7 @@ export class EmployeeListComponent implements OnInit {
     this.keyword      = '';
     this.deptFilter   = null;
     this.statusFilter = null;
+    this.countryFilter = null;
     this.searchSubject.next('');
     this.store.dispatch(employeeActions.setParams({ params: { page: 0 } }));
     this.loadEmployees();

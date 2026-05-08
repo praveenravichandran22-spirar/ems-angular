@@ -28,6 +28,14 @@
       }
 
       <a class="nav-link"
+         routerLink="/students"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: false }">
+        <i class="pi pi-graduation-cap"></i>
+        Students
+      </a>
+
+      <a class="nav-link"
          routerLink="/sim"
          routerLinkActive="active">
         <i class="pi pi-database"></i>

@@ -60,7 +60,12 @@
 }
 
 .field-error {
-  color: var(--red-500);
+  color: red;
+  font-size: 0.78rem;
+}
+
+.field-password-error {
+  color: blue;
   font-size: 0.78rem;
 }
 

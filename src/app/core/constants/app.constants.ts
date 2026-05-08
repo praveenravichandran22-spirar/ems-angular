@@ -11,6 +11,10 @@ export const APP_ROUTES = {
     create: 'employees/new',
     edit:   (id: number | string) => `employees/${id}/edit`,
   },
+  students: {
+    root:   'students',
+    list:   'students',
+  },
   admin: {
     departments: 'admin/departments',
     statuses:    'admin/statuses',

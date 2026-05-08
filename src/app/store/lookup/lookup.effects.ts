@@ -13,10 +13,11 @@ export class LookupEffects {
     this.actions$.pipe(
       ofType(lookupActions.load),
       switchMap(() =>
-        forkJoin([this.svc.getDepartments(), this.svc.getStatuses()]).pipe(
-          map(([departments, statuses]) => [
+        forkJoin([this.svc.getDepartments(), this.svc.getStatuses(), this.svc.getCountries()]).pipe(
+          map(([departments, statuses, countries]) => [
             lookupActions.loadDepartmentsSuccess({ departments }),
             lookupActions.loadStatusesSuccess({ statuses }),
+            lookupActions.loadCountriesSuccess({ countries }),
           ]),
           catchError(err => of([lookupActions.loadFailure({ error: err.message ?? 'Lookup load failed' })]))
         )

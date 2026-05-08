@@ -20,6 +20,12 @@ export const API_ROUTES = {
     profileImage:(id: number) => `${API_BASE_URL}/employees/${id}/profile-image`,
     resume:      (id: number) => `${API_BASE_URL}/employees/${id}/resume`,
   },
+  students: {
+    base:        `${API_BASE_URL}/students`,
+    byId:        (id: number) => `${API_BASE_URL}/students/${id}`,
+    search:      `${API_BASE_URL}/students/search`,
+    profileImage:(id: number) => `${API_BASE_URL}/students/${id}/profile-image`,
+  },
   departments: {
     base: `${API_BASE_URL}/departments`,
     byId: (id: number) => `${API_BASE_URL}/departments/${id}`,
@@ -27,6 +33,10 @@ export const API_ROUTES = {
   statuses: {
     base: `${API_BASE_URL}/statuses`,
     byId: (id: number) => `${API_BASE_URL}/statuses/${id}`,
+  },
+  countries: {
+    base: `${API_BASE_URL}/countries`,
+    byId: (id: number) => `${API_BASE_URL}/countries/${id}`,
   },
   enums: {
     genders: `${API_BASE_URL}/enums/genders`,

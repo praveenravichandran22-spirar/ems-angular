@@ -59,6 +59,29 @@ export const routes: Routes = [
       },
 
       {
+        path: 'students',
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/students/list/student-list.component').then(m => m.StudentListComponent),
+          },
+          {
+            path: 'new',
+            canActivate: [adminGuard],
+            loadComponent: () =>
+              import('./features/students/form/student-form.component').then(m => m.StudentFormComponent),
+          },
+          {
+            path: ':id/edit',
+            canActivate: [adminGuard],
+            loadComponent: () =>
+              import('./features/students/form/student-form.component').then(m => m.StudentFormComponent),
+          },
+        ],
+      },
+
+      {
         path: 'sim',
         loadComponent: () =>
           import('./features/sim/sim-list.component').then(m => m.SimListComponent),

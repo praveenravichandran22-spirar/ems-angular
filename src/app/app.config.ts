@@ -19,6 +19,8 @@ import { AuthStorageService } from './core/services/auth-storage.service';
 import { authActions }        from './store/auth/auth.actions';
 import { employeeFeature }    from './store/employee/employee.reducer';
 import { EmployeeEffects }    from './store/employee/employee.effects';
+import { studentFeature }     from './store/student/student.reducer';
+import { StudentEffects }     from './store/student/student.effects';
 import { lookupFeature }      from './store/lookup/lookup.reducer';
 import { LookupEffects }      from './store/lookup/lookup.effects';
 import { lookupActions }      from './store/lookup/lookup.actions';
@@ -48,9 +50,10 @@ export const appConfig: ApplicationConfig = {
     provideStore({
       [authFeature.name]:     authFeature.reducer,
       [employeeFeature.name]: employeeFeature.reducer,
+      [studentFeature.name]:  studentFeature.reducer,
       [lookupFeature.name]:   lookupFeature.reducer,
     }),
-    provideEffects([AuthEffects, EmployeeEffects, LookupEffects]),
+    provideEffects([AuthEffects, EmployeeEffects, StudentEffects, LookupEffects]),
 
     providePrimeNG({
       theme: { preset: Aura, options: { darkModeSelector: '.dark-mode' } },

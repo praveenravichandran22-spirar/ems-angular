@@ -1,3 +1,4 @@
+import { Country } from './country.model';
 import { Department } from './department.model';
 import { EmploymentStatus } from './status.model';
 
@@ -13,6 +14,7 @@ export interface Employee {
   bio:             string | null;
   department:      Department | null;
   status:          EmploymentStatus | null;
+  country:         Country | null;
   gender:          Gender | null;
   salary:          number | null;
   experienceYears: number | null;
@@ -36,6 +38,7 @@ export interface EmployeeRequest {
   bio:             string | null;
   departmentId:    number | null;
   statusId:        number | null;
+  countryId:       number | null;
   gender:          Gender | null;
   salary:          number | null;
   experienceYears: number | null;

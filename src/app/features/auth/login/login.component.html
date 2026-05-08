@@ -3,9 +3,9 @@
 
     <ng-template #header>
       <div class="auth-header">
-        <i class="pi pi-users auth-icon"></i>
-        <h1 class="auth-title">Employee Management</h1>
-        <p class="auth-subtitle">Sign in to your account</p>
+        <i class="pi pi-slack auth-icon"></i>
+        <h1 class="auth-title">Employee System</h1>
+        <p class="auth-subtitle">Sign in using your credentials</p>
       </div>
     </ng-template>
 
@@ -42,7 +42,7 @@
           styleClass="w-full"
           inputStyleClass="w-full" />
         @if (isInvalid('password')) {
-          <small class="field-error">This field is required.</small>
+          <small class="field-password-error">Password is required.</small>
         }
       </div>
 
@@ -51,6 +51,7 @@
         label="Sign In"
         icon="pi pi-sign-in"
         [loading]="loading()"
+        [disabled]="form.invalid"
         styleClass="w-full mt-2" />
 
     </form>

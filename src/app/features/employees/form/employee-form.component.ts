@@ -19,7 +19,7 @@ import { RadioButton }  from 'primeng/radiobutton';
 import { Divider }      from 'primeng/divider';
 import { ProgressSpinner } from 'primeng/progressspinner';
 
-import { selectDepartments, selectStatuses } from '../../../store/lookup/lookup.selectors';
+import { selectDepartments, selectStatuses, selectCountries } from '../../../store/lookup/lookup.selectors';
 import { EmployeeService }                   from '../../../core/services/employee.service';
 import { Employee, EmployeeRequest }         from '../../../core/models/employee.model';
 import { resolveFileUrl }                    from '../../../core/constants/api.constants';
@@ -45,6 +45,7 @@ export class EmployeeFormComponent implements OnInit {
 
   readonly departments = toSignal(this.store.select(selectDepartments), { initialValue: [] });
   readonly statuses    = toSignal(this.store.select(selectStatuses),    { initialValue: [] });
+  readonly countries    = toSignal(this.store.select(selectCountries), { initialValue: [] });
 
   readonly isEditMode      = signal(false);
   readonly employeeId      = signal<number | null>(null);
@@ -85,6 +86,7 @@ export class EmployeeFormComponent implements OnInit {
       dateOfBirth:     [null as Date | null],
       departmentId:    [null as number | null],
       statusId:        [null as number | null],
+      countryId:       [null as number | null],
       joiningDate:     [null as Date | null, Validators.required],
       salary:          [null as number | null],
       experienceYears: [null as number | null],
@@ -117,6 +119,7 @@ export class EmployeeFormComponent implements OnInit {
           dateOfBirth:     emp.dateOfBirth     ? new Date(emp.dateOfBirth)  : null,
           departmentId:    emp.department?.id  ?? null,
           statusId:        emp.status?.id      ?? null,
+          countryId:       emp.country?.id     ?? null,
           joiningDate:     emp.joiningDate     ? new Date(emp.joiningDate) : null,
           salary:          emp.salary,
           experienceYears: emp.experienceYears,
@@ -156,6 +159,7 @@ export class EmployeeFormComponent implements OnInit {
       dateOfBirth:     this.toDateStr(v.dateOfBirth),
       departmentId:    v.departmentId || null,
       statusId:        v.statusId     || null,
+      countryId:       v.countryId    || null,
       joiningDate:     this.toDateStr(v.joiningDate)!,
       salary:          v.salary          ?? null,
       experienceYears: v.experienceYears ?? null,
@@ -215,10 +219,13 @@ export class EmployeeFormComponent implements OnInit {
 
   onResumeChange(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files?.length) {
+    if (input.files?.length && input.files[0].size <= 10 * 1024 * 1024 && input.files[0].type === 'application/pdf') { 
       this.selectedResume  = input.files[0];
       this.resumeFileName = input.files[0].name;
+    } else {
+      this.toast.add({ severity: 'error', summary: 'Invalid File', detail: 'Please select a valid PDF file (max 10MB).' });
     }
+    
   }
 
   uploadProfileImage(): void {
