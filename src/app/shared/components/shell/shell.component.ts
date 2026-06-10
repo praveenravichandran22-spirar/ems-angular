@@ -8,7 +8,7 @@ import { Divider } from 'primeng/divider';
 import { Toast } from 'primeng/toast';
 
 import { authActions }  from '../../../store/auth/auth.actions';
-import { selectIsAdmin, selectFullName } from '../../../store/auth/auth.selectors';
+import { selectIsAdmin, selectIsReviewer, selectIsApprover, selectFullName } from '../../../store/auth/auth.selectors';
 import { LoadingService } from '../../../core/services/loading.service';
 
 @Component({
@@ -21,8 +21,10 @@ export class ShellComponent {
   private readonly store   = inject(Store);
   readonly loading         = inject(LoadingService);
 
-  readonly isAdmin  = toSignal(this.store.select(selectIsAdmin),  { initialValue: false });
-  readonly fullName = toSignal(this.store.select(selectFullName), { initialValue: '' });
+  readonly isAdmin    = toSignal(this.store.select(selectIsAdmin),    { initialValue: false });
+  readonly isReviewer = toSignal(this.store.select(selectIsReviewer), { initialValue: false });
+  readonly isApprover = toSignal(this.store.select(selectIsApprover), { initialValue: false });
+  readonly fullName   = toSignal(this.store.select(selectFullName),   { initialValue: '' });
 
   logout(): void {
     this.store.dispatch(authActions.logout());

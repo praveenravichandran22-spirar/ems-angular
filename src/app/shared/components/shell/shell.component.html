@@ -10,6 +10,8 @@
     </div>
 
     <nav class="navbar-nav">
+
+      <!-- Employees — visible to all roles -->
       <a class="nav-link"
          routerLink="/employees"
          routerLinkActive="active"
@@ -18,6 +20,7 @@
         Employees
       </a>
 
+      <!-- Admin-only links -->
       @if (isAdmin()) {
         <a class="nav-link"
            routerLink="/admin/users"
@@ -25,22 +28,42 @@
           <i class="pi pi-users"></i>
           Users
         </a>
+
+        <a class="nav-link"
+           routerLink="/students"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: false }">
+          <i class="pi pi-graduation-cap"></i>
+          Students
+        </a>
+
+        <a class="nav-link"
+           routerLink="/sim"
+           routerLinkActive="active">
+          <i class="pi pi-database"></i>
+          Dataset Sim
+        </a>
       }
 
-      <a class="nav-link"
-         routerLink="/students"
-         routerLinkActive="active"
-         [routerLinkActiveOptions]="{ exact: false }">
-        <i class="pi pi-graduation-cap"></i>
-        Students
-      </a>
+      <!-- Reviewer-only link -->
+      @if (isReviewer()) {
+        <a class="nav-link"
+           routerLink="/review"
+           routerLinkActive="active">
+          <i class="pi pi-eye"></i>
+          Review Queue
+        </a>
+      }
 
-      <a class="nav-link"
-         routerLink="/sim"
-         routerLinkActive="active">
-        <i class="pi pi-database"></i>
-        Dataset Sim
-      </a>
+      <!-- Approver-only link -->
+      @if (isApprover()) {
+        <a class="nav-link"
+           routerLink="/approval"
+           routerLinkActive="active">
+          <i class="pi pi-check-circle"></i>
+          Approval Queue
+        </a>
+      }
 
     </nav>
 

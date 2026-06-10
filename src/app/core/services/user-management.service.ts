@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../constants/api.constants';
-import { UserRecord, UserSearchParams } from '../models/user-record.model';
+import { CreateUserRequest, UpdateUserRequest, UserRecord, UserSearchParams } from '../models/user-record.model';
 import { PagedResponse } from '../models/employee.model';
 
 @Injectable({ providedIn: 'root' })
@@ -19,5 +19,17 @@ export class UserManagementService {
     if (params.keyword) p = p.set('keyword', params.keyword);
     if (params.role)    p = p.set('role',    params.role);
     return this.http.get<PagedResponse<UserRecord>>(this.base, { params: p });
+  }
+
+  createUser(request: CreateUserRequest): Observable<UserRecord> {
+    return this.http.post<UserRecord>(this.base, request);
+  }
+
+  updateUser(id: number, request: UpdateUserRequest): Observable<UserRecord> {
+    return this.http.put<UserRecord>(`${this.base}/${id}`, request);
+  }
+
+  deleteUser(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.base}/${id}`);
   }
 }

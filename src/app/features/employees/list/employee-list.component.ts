@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { Router } from '@angular/router';
@@ -22,9 +22,10 @@ import { Tooltip } from 'primeng/tooltip';
 import { employeeActions }                                                   from '../../../store/employee/employee.actions';
 import { selectEmployees, selectLoading, selectParams, selectTotalElements } from '../../../store/employee/employee.selectors';
 import { selectDepartments, selectStatuses, selectCountries }                                 from '../../../store/lookup/lookup.selectors';
-import { selectIsAdmin, selectCurrentUserEmail }                              from '../../../store/auth/auth.selectors';
+import { selectIsAdmin, selectIsReviewer, selectIsApprover, selectCurrentUserEmail } from '../../../store/auth/auth.selectors';
 import { APP_ROUTES }                                                        from '../../../core/constants/app.constants';
 import { resolveFileUrl }                                                    from '../../../core/constants/api.constants';
+import { WorkflowStatus }                                                    from '../../../core/models/employee.model';
 
 @Component({
   selector: 'app-employee-list',
@@ -47,8 +48,14 @@ export class EmployeeListComponent implements OnInit {
   readonly departments = toSignal(this.store.select(selectDepartments),    { initialValue: [] });
   readonly statuses    = toSignal(this.store.select(selectStatuses),       { initialValue: [] });
   readonly countries   = toSignal(this.store.select(selectCountries),      { initialValue: [] });
-  readonly isAdmin            = toSignal(this.store.select(selectIsAdmin),            { initialValue: false });
-  readonly currentUserEmail   = toSignal(this.store.select(selectCurrentUserEmail),   { initialValue: null });
+  readonly isAdmin          = toSignal(this.store.select(selectIsAdmin),          { initialValue: false });
+  readonly isReviewer       = toSignal(this.store.select(selectIsReviewer),       { initialValue: false });
+  readonly isApprover       = toSignal(this.store.select(selectIsApprover),       { initialValue: false });
+  readonly currentUserEmail = toSignal(this.store.select(selectCurrentUserEmail), { initialValue: null });
+
+  readonly showWorkflowColumn = computed(() =>
+    this.isAdmin() || this.isReviewer() || this.isApprover()
+  );
 
   keyword      = '';
   deptFilter:   number | null = null;
@@ -164,4 +171,22 @@ export class EmployeeListComponent implements OnInit {
   }
 
   resolveFileUrl = resolveFileUrl;
+
+  getWorkflowSeverity(status: WorkflowStatus): 'secondary' | 'info' | 'warn' | 'success' | 'danger' {
+    switch (status) {
+      case 'DRAFT':       return 'secondary';
+      case 'IN_REVIEW':   return 'info';
+      case 'IN_APPROVAL': return 'warn';
+      case 'APPROVED':    return 'success';
+      case 'REJECTED':    return 'danger';
+    }
+  }
+
+  getWorkflowLabel(status: WorkflowStatus): string {
+    const map: Record<WorkflowStatus, string> = {
+      DRAFT: 'Draft', IN_REVIEW: 'In Review', IN_APPROVAL: 'In Approval',
+      APPROVED: 'Approved', REJECTED: 'Rejected',
+    };
+    return map[status];
+  }
 }

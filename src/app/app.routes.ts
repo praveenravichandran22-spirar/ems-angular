@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { ShellComponent } from './shared/components/shell/shell.component';
-import { authGuard }      from './core/guards/auth.guard';
-import { adminGuard }     from './core/guards/role.guard';
+import { authGuard }                              from './core/guards/auth.guard';
+import { adminGuard, reviewerGuard, approverGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'employees', pathMatch: 'full' },
@@ -107,6 +107,29 @@ export const routes: Routes = [
               import('./features/statuses/status-list.component').then(m => m.StatusListComponent),
           },
         ],
+      },
+
+      // ── Reviewer ────────────────────────────────────────────────────────
+      {
+        path: 'review',
+        canActivate: [reviewerGuard],
+        loadComponent: () =>
+          import('./features/review/review-dashboard.component').then(m => m.ReviewDashboardComponent),
+      },
+
+      // ── Approver ────────────────────────────────────────────────────────
+      {
+        path: 'approval',
+        canActivate: [approverGuard],
+        loadComponent: () =>
+          import('./features/approval/approval-dashboard.component').then(m => m.ApprovalDashboardComponent),
+      },
+
+      // ── Access denied ────────────────────────────────────────────────────
+      {
+        path: 'unauthorized',
+        loadComponent: () =>
+          import('./features/unauthorized/unauthorized.component').then(m => m.UnauthorizedComponent),
       },
     ],
   },

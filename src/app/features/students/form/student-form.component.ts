@@ -76,8 +76,8 @@ export class StudentFormComponent implements OnInit {
       lastName:         ['', [Validators.required, Validators.maxLength(50)]],
       email:            ['', [Validators.required, Validators.email]],
       enrollmentNumber: ['', Validators.required],
-      phone:            [null as string | null, Validators.pattern(/^\+?[\d\s\-().]{7,20}$/)],
-      gender:           [null],
+      phone:            [null as string | null, Validators.required , Validators.pattern(/^\+?[\d\s\-().]{7,20}$/)],
+      gender:           [null,],
       dateOfBirth:      [null as Date | null],
       course:           ['', [Validators.required, Validators.minLength(3)]],
       year:             [null as number | null],
@@ -231,7 +231,7 @@ export class StudentFormComponent implements OnInit {
     if (!errors) return '';
     if (errors['required'])  return 'This field is required.';
     if (errors['email'])     return 'Enter a valid email address.';
-    if (errors['maxlength']) return `Maximum ${errors['maxlength'].requiredLength} characters.`;
+    if (errors['minlength']) return `Maximum ${errors['maxlength'].requiredLength} characters.`;
     if (errors['pattern'])   return 'Enter a valid phone number.';
     return 'Invalid value.';
   }

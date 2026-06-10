@@ -52,12 +52,16 @@ export class EmployeeFormComponent implements OnInit {
   readonly saving          = signal(false);
   readonly loadingEmployee = signal(false);
 
-  readonly currentProfileImageUrl = signal<string | null>(null);
-  readonly currentResumeUrl       = signal<string | null>(null);
+  readonly currentProfileImageUrl      = signal<string | null>(null);
+  readonly currentProfileImageFileName = signal<string | null>(null);
+  readonly currentResumeUrl            = signal<string | null>(null);
+  readonly currentResumeFileName       = signal<string | null>(null);
   selectedProfileImage: File | null = null;
   selectedResume:       File | null = null;
   readonly uploadingImage  = signal(false);
   readonly uploadingResume = signal(false);
+  readonly removingImage   = signal(false);
+  readonly removingResume  = signal(false);
   profileImageFileName = '';
   resumeFileName       = '';
 
@@ -109,7 +113,9 @@ export class EmployeeFormComponent implements OnInit {
     this.svc.getById(id).subscribe({
       next: emp => {
         this.currentProfileImageUrl.set(resolveFileUrl(emp.profileImageUrl));
+        this.currentProfileImageFileName.set(emp.profileImageFileName);
         this.currentResumeUrl.set(resolveFileUrl(emp.resumeUrl));
+        this.currentResumeFileName.set(emp.resumeFileName);
         this.form.patchValue({
           firstName:       emp.firstName,
           lastName:        emp.lastName,
@@ -182,7 +188,7 @@ export class EmployeeFormComponent implements OnInit {
           summary: this.isEditMode() ? 'Updated' : 'Created',
           detail:  `${emp.firstName} ${emp.lastName} ${this.isEditMode() ? 'updated' : 'created'} successfully.`,
         });
-        if (!this.isEditMode() && (this.selectedProfileImage || this.selectedResume)) {
+        if (this.selectedProfileImage || this.selectedResume) {
           this.autoUploadFiles(emp.id, () => this.router.navigate(['/employees', emp.id]));
         } else {
           this.router.navigate(['/employees', emp.id]);
@@ -212,20 +218,23 @@ export class EmployeeFormComponent implements OnInit {
   onProfileImageChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
-      this.selectedProfileImage  = input.files[0];
+      this.selectedProfileImage = input.files[0];
       this.profileImageFileName = input.files[0].name;
+      if (this.isEditMode()) this.uploadProfileImage();
     }
   }
 
   onResumeChange(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files?.length && input.files[0].size <= 10 * 1024 * 1024 && input.files[0].type === 'application/pdf') { 
-      this.selectedResume  = input.files[0];
-      this.resumeFileName = input.files[0].name;
-    } else {
+    if (!input.files?.length) return;
+    const file = input.files[0];
+    if (file.size > 10 * 1024 * 1024 || file.type !== 'application/pdf') {
       this.toast.add({ severity: 'error', summary: 'Invalid File', detail: 'Please select a valid PDF file (max 10MB).' });
+      return;
     }
-    
+    this.selectedResume = file;
+    this.resumeFileName = file.name;
+    if (this.isEditMode()) this.uploadResume();
   }
 
   uploadProfileImage(): void {
@@ -234,7 +243,8 @@ export class EmployeeFormComponent implements OnInit {
     this.svc.uploadProfileImage(this.employeeId()!, this.selectedProfileImage).subscribe({
       next: emp => {
         this.uploadingImage.set(false);
-        this.currentProfileImageUrl.set(resolveFileUrl(emp.profileImageUrl));
+        this.currentProfileImageUrl.set(resolveFileUrl(emp.profileImageUrl) + '?t=' + Date.now());
+        this.currentProfileImageFileName.set(emp.profileImageFileName);
         this.selectedProfileImage = null;
         this.profileImageFileName = '';
         this.toast.add({ severity: 'success', summary: 'Uploaded', detail: 'Profile image updated.' });
@@ -253,6 +263,7 @@ export class EmployeeFormComponent implements OnInit {
       next: emp => {
         this.uploadingResume.set(false);
         this.currentResumeUrl.set(resolveFileUrl(emp.resumeUrl));
+        this.currentResumeFileName.set(emp.resumeFileName);
         this.selectedResume  = null;
         this.resumeFileName = '';
         this.toast.add({ severity: 'success', summary: 'Uploaded', detail: 'Resume updated.' });
@@ -260,6 +271,89 @@ export class EmployeeFormComponent implements OnInit {
       error: () => {
         this.uploadingResume.set(false);
         this.toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to upload resume.' });
+      },
+    });
+  }
+
+  removeProfileImage(): void {
+    if (!this.employeeId()) return;
+    this.removingImage.set(true);
+    this.svc.removeProfileImage(this.employeeId()!).subscribe({
+      next: () => {
+        this.removingImage.set(false);
+        this.currentProfileImageUrl.set(null);
+        this.currentProfileImageFileName.set(null);
+        this.selectedProfileImage = null;
+        this.profileImageFileName = '';
+        this.toast.add({ severity: 'success', summary: 'Removed', detail: 'Profile image removed.', life: 2000 });
+      },
+      error: () => {
+        this.removingImage.set(false);
+        this.toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to remove profile image.' });
+      },
+    });
+  }
+
+  removeResume(): void {
+    if (!this.employeeId()) return;
+    this.removingResume.set(true);
+    this.svc.removeResume(this.employeeId()!).subscribe({
+      next: () => {
+        this.removingResume.set(false);
+        this.currentResumeUrl.set(null);
+        this.currentResumeFileName.set(null);
+        this.selectedResume = null;
+        this.resumeFileName = '';
+        this.toast.add({ severity: 'success', summary: 'Removed', detail: 'Resume removed.', life: 2000 });
+      },
+      error: () => {
+        this.removingResume.set(false);
+        this.toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to remove resume.' });
+      },
+    });
+  }
+
+  autoSave(): void {
+    if (!this.isEditMode() || this.form.invalid || this.saving()) return;
+
+    const v = this.form.getRawValue();
+    const payload: EmployeeRequest = {
+      firstName:       v.firstName,
+      lastName:        v.lastName,
+      email:           v.email,
+      phone:           v.phone  || null,
+      gender:          v.gender || null,
+      dateOfBirth:     this.toDateStr(v.dateOfBirth),
+      departmentId:    v.departmentId || null,
+      statusId:        v.statusId     || null,
+      countryId:       v.countryId    || null,
+      joiningDate:     this.toDateStr(v.joiningDate)!,
+      salary:          v.salary          ?? null,
+      experienceYears: v.experienceYears ?? null,
+      isRemote:        v.isRemote        ?? false,
+      address:         v.address || null,
+      bio:             v.bio     || null,
+      rating:          v.rating  ?? null,
+    };
+
+    this.saving.set(true);
+    this.svc.update(this.employeeId()!, payload).subscribe({
+      next: () => {
+        this.saving.set(false);
+        this.toast.add({
+          severity: 'success',
+          summary:  'Changes saved',
+          life:     1500,
+        });
+      },
+      error: err => {
+        this.saving.set(false);
+        this.toast.add({
+          severity: 'error',
+          summary:  'Auto-save failed',
+          detail:   err.error?.message ?? 'Could not save changes.',
+          life:     3000,
+        });
       },
     });
   }

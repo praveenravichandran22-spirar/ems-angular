@@ -3,12 +3,14 @@ export interface LoginRequest {
   password: string;
 }
 
+export type AppRole = 'ROLE_ADMIN' | 'ROLE_USER' | 'ROLE_REVIEWER' | 'ROLE_APPROVER';
+
 export interface RegisterRequest {
   firstName: string;
   lastName:  string;
   email:     string;
   password:  string;
-  role:      'ROLE_ADMIN' | 'ROLE_USER';
+  role:      AppRole;
 }
 
 export interface AuthResponse {
@@ -17,7 +19,7 @@ export interface AuthResponse {
   email:        string;
   firstName:    string;
   lastName:     string;
-  role:         'ROLE_ADMIN' | 'ROLE_USER';
+  role:         AppRole;
 }
 
 export interface RefreshTokenRequest {
@@ -28,5 +30,5 @@ export interface AuthUser {
   email:     string;
   firstName: string;
   lastName:  string;
-  role:      'ROLE_ADMIN' | 'ROLE_USER';
+  role:      AppRole;
 }

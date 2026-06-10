@@ -19,6 +19,9 @@ export const APP_ROUTES = {
     departments: 'admin/departments',
     statuses:    'admin/statuses',
   },
+  review:       'review',
+  approval:     'approval',
+  unauthorized: 'unauthorized',
 } as const;
 
 export const STORAGE_KEYS = {
@@ -37,8 +40,10 @@ export const PAGINATION_DEFAULTS = {
 export const GENDERS = ['MALE', 'FEMALE', 'OTHER', 'PREFER_NOT_TO_SAY'] as const;
 
 export const ROLES = {
-  admin: 'ROLE_ADMIN',
-  user:  'ROLE_USER',
+  admin:    'ROLE_ADMIN',
+  user:     'ROLE_USER',
+  reviewer: 'ROLE_REVIEWER',
+  approver: 'ROLE_APPROVER',
 } as const;
 
 export const TOKEN_HEADER = 'Authorization';

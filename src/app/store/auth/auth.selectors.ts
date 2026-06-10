@@ -15,9 +15,24 @@ export const selectIsAuthenticated = createSelector(
   token => !!token
 );
 
+export const selectUserRole = createSelector(
+  selectUser,
+  user => user?.role ?? null
+);
+
 export const selectIsAdmin = createSelector(
   selectUser,
   user => user?.role === ROLES.admin
+);
+
+export const selectIsReviewer = createSelector(
+  selectUser,
+  user => user?.role === ROLES.reviewer
+);
+
+export const selectIsApprover = createSelector(
+  selectUser,
+  user => user?.role === ROLES.approver
 );
 
 export const selectFullName = createSelector(

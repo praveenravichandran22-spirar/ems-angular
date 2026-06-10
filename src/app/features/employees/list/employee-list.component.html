@@ -83,6 +83,9 @@
           Country <p-sortIcon field="country.countryName" />
         </th>
         <th>Status</th>
+        @if (showWorkflowColumn()) {
+          <th>Workflow</th>
+        }
         @if (isAdmin()) {
           <th pSortableColumn="salary">
             Salary <p-sortIcon field="salary" />
@@ -123,6 +126,12 @@
             <span class="text-muted">—</span>
           }
         </td>
+        @if (showWorkflowColumn()) {
+          <td>
+            <p-tag [value]="getWorkflowLabel(emp.workflowStatus)"
+                   [severity]="getWorkflowSeverity(emp.workflowStatus)" />
+          </td>
+        }
         @if (isAdmin()) {
           <td>
             <div class="salary-cell">
@@ -157,7 +166,7 @@
 
     <ng-template #emptymessage>
       <tr>
-        <td [attr.colspan]="isAdmin() ? 8 : 5" class="empty-msg">No employees found.</td>
+        <td [attr.colspan]="isAdmin() ? (showWorkflowColumn() ? 9 : 8) : (showWorkflowColumn() ? 6 : 5)" class="empty-msg">No employees found.</td>
       </tr>
     </ng-template>
 

@@ -66,6 +66,11 @@
               <i class="pi pi-sitemap"></i> {{ emp.department.name }}
             </span>
           }
+          <!-- Workflow status badge -->
+          <p-tag [value]="getWorkflowLabel(emp.workflowStatus)"
+                 [severity]="getWorkflowSeverity(emp.workflowStatus)"
+                 [icon]="'pi ' + getWorkflowIcon(emp.workflowStatus)"
+                 styleClass="workflow-tag" />
         </div>
 
         <div class="hero-stats">
@@ -202,6 +207,105 @@
       <div class="bio-card">
         <h3 class="card-title"><i class="pi pi-align-left"></i> Bio</h3>
         <p class="bio-text">{{ emp.bio }}</p>
+      </div>
+    }
+
+    <!-- ── Workflow — admin only ────────────────────────────────────────── -->
+    @if (isAdmin()) {
+
+      <!-- Rejection note banner -->
+      @if (emp.workflowStatus === 'REJECTED' && lastRejectionNote()) {
+        <div class="rejection-banner">
+          <i class="pi pi-times-circle"></i>
+          <div>
+            <strong>Rejected — reason from reviewer/approver:</strong>
+            <p>{{ lastRejectionNote() }}</p>
+          </div>
+        </div>
+      }
+
+      <div class="info-card workflow-card">
+        <h3 class="card-title"><i class="pi pi-sitemap"></i> Workflow Configuration</h3>
+
+        <div class="workflow-body">
+          <!-- Assign Reviewers -->
+          <div class="workflow-field">
+            <label class="wf-label">Reviewers</label>
+            <p-multiselect
+              [options]="reviewerOptions()"
+              [(ngModel)]="selectedReviewerIds"
+              optionLabel="displayName"
+              optionValue="id"
+              placeholder="Select reviewers"
+              display="chip"
+              [style]="{ width: '100%' }"
+              [disabled]="emp.workflowStatus !== 'DRAFT' && emp.workflowStatus !== 'REJECTED'"
+            />
+          </div>
+
+          <!-- Assign Approvers -->
+          <div class="workflow-field">
+            <label class="wf-label">Approvers</label>
+            <p-multiselect
+              [options]="approverOptions()"
+              [(ngModel)]="selectedApproverIds"
+              optionLabel="displayName"
+              optionValue="id"
+              placeholder="Select approvers"
+              display="chip"
+              [style]="{ width: '100%' }"
+              [disabled]="emp.workflowStatus !== 'DRAFT' && emp.workflowStatus !== 'REJECTED'"
+            />
+          </div>
+
+          <!-- Action buttons -->
+          <div class="workflow-actions">
+            <p-button
+              label="Save Assignment"
+              icon="pi pi-save"
+              severity="secondary"
+              [outlined]="true"
+              [loading]="workflowSaving"
+              [disabled]="emp.workflowStatus !== 'DRAFT' && emp.workflowStatus !== 'REJECTED'"
+              (onClick)="onWorkflowAssign()"
+            />
+            <p-button
+              label="Submit for Review"
+              icon="pi pi-send"
+              severity="primary"
+              [loading]="submitting"
+              [disabled]="(emp.workflowStatus !== 'DRAFT' && emp.workflowStatus !== 'REJECTED') || selectedReviewerIds.length === 0 || selectedApproverIds.length === 0"
+              (onClick)="submitForReview()"
+              pTooltip="Reviewers and approvers must be assigned first"
+            />
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- ── Workflow History ─────────────────────────────────────────────── -->
+    @if (workflowHistory().length > 0) {
+      <div class="info-card history-card">
+        <h3 class="card-title"><i class="pi pi-history"></i> Workflow History</h3>
+        <div class="timeline">
+          @for (action of workflowHistory(); track action.id) {
+            <div class="timeline-item">
+              <div class="timeline-icon" [style.background]="getActionColor(action.actionType)">
+                <i class="pi {{ getActionIcon(action.actionType) }}"></i>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-header">
+                  <span class="timeline-action">{{ getActionLabel(action.actionType) }}</span>
+                  <span class="timeline-date">{{ action.createdAt | date:'dd MMM yyyy, HH:mm' }}</span>
+                </div>
+                <div class="timeline-by">by {{ action.performedByName }} ({{ action.performedByEmail }})</div>
+                @if (action.note) {
+                  <div class="timeline-note">{{ action.note }}</div>
+                }
+              </div>
+            </div>
+          }
+        </div>
       </div>
     }
 
