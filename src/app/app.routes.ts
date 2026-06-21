@@ -113,16 +113,18 @@ export const routes: Routes = [
       {
         path: 'review',
         canActivate: [reviewerGuard],
+        data: { mode: 'review' },
         loadComponent: () =>
-          import('./features/review/review-dashboard.component').then(m => m.ReviewDashboardComponent),
+          import('./features/workflow-dashboard/workflow-dashboard.component').then(m => m.WorkflowDashboardComponent),
       },
 
       // ── Approver ────────────────────────────────────────────────────────
       {
         path: 'approval',
         canActivate: [approverGuard],
+        data: { mode: 'approval' },
         loadComponent: () =>
-          import('./features/approval/approval-dashboard.component').then(m => m.ApprovalDashboardComponent),
+          import('./features/workflow-dashboard/workflow-dashboard.component').then(m => m.WorkflowDashboardComponent),
       },
 
       // ── Access denied ────────────────────────────────────────────────────

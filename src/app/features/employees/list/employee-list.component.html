@@ -68,33 +68,33 @@
     <ng-template #header>
       <tr>
         @if (isAdmin()) {
-          <th style="width:3rem"></th>
+          <th scope="col" style="width:3rem"></th>
         }
-        <th pSortableColumn="firstName">
+        <th scope="col" pSortableColumn="firstName">
           Name <p-sortIcon field="firstName" />
         </th>
-        <th pSortableColumn="email">
+        <th scope="col" pSortableColumn="email">
           Email <p-sortIcon field="email" />
         </th>
-        <th pSortableColumn="department.name">
+        <th scope="col" pSortableColumn="department.name">
           Department <p-sortIcon field="department.name" />
         </th>
-        <th pSortableColumn="country.countryName">
+        <th scope="col" pSortableColumn="country.countryName">
           Country <p-sortIcon field="country.countryName" />
         </th>
-        <th>Status</th>
+        <th scope="col">Status</th>
         @if (showWorkflowColumn()) {
-          <th>Stage</th>
+          <th scope="col">Stage</th>
         }
         @if (isAdmin()) {
-          <th pSortableColumn="salary">
+          <th scope="col" pSortableColumn="salary">
             Salary <p-sortIcon field="salary" />
           </th>
-          <th pSortableColumn="joiningDate">
+          <th scope="col" pSortableColumn="joiningDate">
             Joining Date <p-sortIcon field="joiningDate" />
           </th>
         }
-        <th style="width:8rem">Actions</th>
+        <th scope="col" style="width:8rem">Actions</th>
       </tr>
     </ng-template>
 

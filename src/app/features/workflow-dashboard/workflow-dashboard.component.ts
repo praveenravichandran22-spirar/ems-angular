@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule }  from '@angular/forms';
-import { Router }       from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { TableModule }     from 'primeng/table';
 import { Button }          from 'primeng/button';
@@ -11,25 +11,30 @@ import { Textarea }        from 'primeng/textarea';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { MessageService }  from 'primeng/api';
 
-import { EmployeeService }  from '../../core/services/employee.service';
-import { Employee, WorkflowStatus } from '../../core/models/employee.model';
-import { WorkflowDecisionRequest }  from '../../core/models/workflow.model';
-import { APP_ROUTES }               from '../../core/constants/app.constants';
+import { EmployeeService }              from '../../core/services/employee.service';
+import { Employee, WorkflowStatus }     from '../../core/models/employee.model';
+import { WorkflowDecisionRequest }      from '../../core/models/workflow.model';
+import { APP_ROUTES }                   from '../../core/constants/app.constants';
+
+export type DashboardMode = 'review' | 'approval';
 
 @Component({
-  selector: 'app-approval-dashboard',
+  selector: 'app-workflow-dashboard',
   standalone: true,
   imports: [
     CommonModule, FormsModule,
     TableModule, Button, Tag, Dialog, Textarea, ProgressSpinner,
   ],
-  templateUrl: './approval-dashboard.component.html',
-  styleUrl:    './approval-dashboard.component.scss',
+  templateUrl: './workflow-dashboard.component.html',
+  styleUrl:    './workflow-dashboard.component.scss',
 })
-export class ApprovalDashboardComponent implements OnInit {
+export class WorkflowDashboardComponent implements OnInit {
   private readonly svc    = inject(EmployeeService);
   private readonly router = inject(Router);
+  private readonly route  = inject(ActivatedRoute);
   private readonly toast  = inject(MessageService);
+
+  readonly mode = this.route.snapshot.data['mode'] as DashboardMode;
 
   readonly employees = signal<Employee[]>([]);
   readonly loading   = signal(true);
@@ -40,13 +45,26 @@ export class ApprovalDashboardComponent implements OnInit {
   dialogSaving   = false;
   selectedEmp: Employee | null = null;
 
-  ngOnInit(): void {
-    this.loadQueue();
-  }
+  get title()           { return this.mode === 'review' ? 'Review Queue' : 'Approval Queue'; }
+  get subtitle()        { return this.mode === 'review'
+    ? 'Employee records assigned to you for review.'
+    : 'Employee records assigned to you for final approval.'; }
+  get emptyMsg()        { return this.mode === 'review'
+    ? 'No records pending your review.'
+    : 'No records pending your approval.'; }
+  get noteId()          { return this.mode === 'review' ? 'reviewNote' : 'approvalNote'; }
+  get notePlaceholder() { return this.mode === 'review'
+    ? 'Enter your review note...'
+    : 'Enter your approval note...'; }
+
+  ngOnInit(): void { this.loadQueue(); }
 
   loadQueue(): void {
     this.loading.set(true);
-    this.svc.getPendingApproval().subscribe({
+    const obs = this.mode === 'review'
+      ? this.svc.getPendingReview()
+      : this.svc.getPendingApproval();
+    obs.subscribe({
       next:  list => { this.employees.set(list); this.loading.set(false); },
       error: ()   => this.loading.set(false),
     });
@@ -66,23 +84,29 @@ export class ApprovalDashboardComponent implements OnInit {
       decision: this.dialogDecision,
       note:     this.dialogNote.trim(),
     };
-    this.svc.approveEmployee(this.selectedEmp.id, req).subscribe({
+    const obs = this.mode === 'review'
+      ? this.svc.reviewEmployee(this.selectedEmp.id, req)
+      : this.svc.approveEmployee(this.selectedEmp.id, req);
+    obs.subscribe({
       next: () => {
         this.dialogSaving  = false;
         this.dialogVisible = false;
-        const label = this.dialogDecision === 'APPROVE' ? 'approved' : 'rejected';
+        const label  = this.dialogDecision === 'APPROVE' ? 'approved' : 'rejected';
+        const detail = this.mode === 'review'
+          ? `Employee ${label} and moved to next stage.`
+          : `Employee ${label}.`;
         this.toast.add({
           severity: this.dialogDecision === 'APPROVE' ? 'success' : 'warn',
-          summary:  'Done',
-          detail:   `Employee ${label}.`,
-          life:     3000,
+          summary: 'Done', detail, life: 3000,
         });
         this.loadQueue();
       },
       error: err => {
         this.dialogSaving = false;
-        const msg = err?.error?.message ?? 'Action failed';
-        this.toast.add({ severity: 'error', summary: 'Error', detail: msg, life: 4000 });
+        this.toast.add({
+          severity: 'error', summary: 'Error',
+          detail: err?.error?.message ?? 'Action failed', life: 4000,
+        });
       },
     });
   }

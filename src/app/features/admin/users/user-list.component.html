@@ -61,12 +61,12 @@
 
     <ng-template #header>
       <tr>
-        <th pSortableColumn="firstName">Name <p-sortIcon field="firstName" /></th>
-        <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
-        <th pSortableColumn="role">Role <p-sortIcon field="role" /></th>
-        <th>Status</th>
-        <th pSortableColumn="createdAt">Registered <p-sortIcon field="createdAt" /></th>
-        <th style="width:8rem">Actions</th>
+        <th scope="col" pSortableColumn="firstName">Name <p-sortIcon field="firstName" /></th>
+        <th scope="col" pSortableColumn="email">Email <p-sortIcon field="email" /></th>
+        <th scope="col" pSortableColumn="role">Role <p-sortIcon field="role" /></th>
+        <th scope="col">Status</th>
+        <th scope="col" pSortableColumn="createdAt">Registered <p-sortIcon field="createdAt" /></th>
+        <th scope="col" style="width:8rem">Actions</th>
       </tr>
     </ng-template>
 
@@ -120,18 +120,19 @@
   <div class="dialog-form">
     <div class="form-row">
       <div class="form-field">
-        <label>First Name <span class="required">*</span></label>
-        <input pInputText [(ngModel)]="editForm.firstName" placeholder="First name" class="w-full" />
+        <label for="editFirstName">First Name <span class="required">*</span></label>
+        <input id="editFirstName" pInputText [(ngModel)]="editForm.firstName" placeholder="First name" class="w-full" />
       </div>
       <div class="form-field">
-        <label>Last Name <span class="required">*</span></label>
-        <input pInputText [(ngModel)]="editForm.lastName" placeholder="Last name" class="w-full" />
+        <label for="editLastName">Last Name <span class="required">*</span></label>
+        <input id="editLastName" pInputText [(ngModel)]="editForm.lastName" placeholder="Last name" class="w-full" />
       </div>
     </div>
 
     <div class="form-field">
-      <label>Role <span class="required">*</span></label>
+      <label for="editRole">Role <span class="required">*</span></label>
       <p-select
+        inputId="editRole"
         [options]="createRoleOptions"
         [(ngModel)]="editForm.role"
         optionLabel="label"
@@ -141,8 +142,9 @@
     </div>
 
     <div class="form-field">
-      <label>New Password</label>
+      <label for="editPassword">New Password</label>
       <p-password
+        inputId="editPassword"
         [(ngModel)]="editForm.password"
         [feedback]="false"
         [toggleMask]="true"
@@ -189,23 +191,24 @@
 
     <div class="form-row">
       <div class="form-field">
-        <label>First Name <span class="required">*</span></label>
-        <input pInputText [(ngModel)]="form.firstName" placeholder="First name" class="w-full" />
+        <label for="createFirstName">First Name <span class="required">*</span></label>
+        <input id="createFirstName" pInputText [(ngModel)]="form.firstName" placeholder="First name" class="w-full" />
       </div>
       <div class="form-field">
-        <label>Last Name <span class="required">*</span></label>
-        <input pInputText [(ngModel)]="form.lastName" placeholder="Last name" class="w-full" />
+        <label for="createLastName">Last Name <span class="required">*</span></label>
+        <input id="createLastName" pInputText [(ngModel)]="form.lastName" placeholder="Last name" class="w-full" />
       </div>
     </div>
 
     <div class="form-field">
-      <label>Email Address <span class="required">*</span></label>
-      <input pInputText [(ngModel)]="form.email" type="email" placeholder="user@example.com" class="w-full" />
+      <label for="createEmail">Email Address <span class="required">*</span></label>
+      <input id="createEmail" pInputText [(ngModel)]="form.email" type="email" placeholder="user@example.com" class="w-full" />
     </div>
 
     <div class="form-field">
-      <label>Password <span class="required">*</span></label>
+      <label for="createPassword">Password <span class="required">*</span></label>
       <p-password
+        inputId="createPassword"
         [(ngModel)]="form.password"
         [feedback]="false"
         [toggleMask]="true"
@@ -215,8 +218,9 @@
     </div>
 
     <div class="form-field">
-      <label>Role <span class="required">*</span></label>
+      <label for="createRole">Role <span class="required">*</span></label>
       <p-select
+        inputId="createRole"
         [options]="createRoleOptions"
         [(ngModel)]="form.role"
         optionLabel="label"

@@ -2,8 +2,8 @@
 
   <div class="page-header">
     <div>
-      <h2 class="page-title">Approval Queue</h2>
-      <p class="page-subtitle">Employee records assigned to you for final approval.</p>
+      <h2 class="page-title">{{ title }}</h2>
+      <p class="page-subtitle">{{ subtitle }}</p>
     </div>
     <p-button icon="pi pi-refresh" [text]="true" severity="secondary"
               pTooltip="Refresh" (onClick)="loadQueue()" />
@@ -16,19 +16,19 @@
   } @else if (employees().length === 0) {
     <div class="empty-state">
       <i class="pi pi-check-circle"></i>
-      <p>No records pending your approval.</p>
+      <p>{{ emptyMsg }}</p>
     </div>
   } @else {
     <p-table [value]="employees()" [paginator]="true" [rows]="10"
              styleClass="p-datatable-sm" responsiveLayout="scroll">
       <ng-template #header>
         <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Department</th>
-          <th>Status</th>
-          <th>Workflow</th>
-          <th style="width:180px">Actions</th>
+          <th scope="col">Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Department</th>
+          <th scope="col">Status</th>
+          <th scope="col">Workflow</th>
+          <th scope="col" style="width:180px">Actions</th>
         </tr>
       </ng-template>
       <ng-template #body let-emp>
@@ -75,17 +75,22 @@
     <div class="dialog-body">
       <p class="dialog-info">
         @if (dialogDecision === 'APPROVE') {
-          Final approval of <strong>{{ selectedEmp.firstName }} {{ selectedEmp.lastName }}</strong>
-          will mark this record as <em>Approved</em>.
+          @if (mode === 'review') {
+            Approving <strong>{{ selectedEmp.firstName }} {{ selectedEmp.lastName }}</strong> will move
+            the record to the <em>Approval</em> stage.
+          } @else {
+            Final approval of <strong>{{ selectedEmp.firstName }} {{ selectedEmp.lastName }}</strong>
+            will mark this record as <em>Approved</em>.
+          }
         } @else {
           Rejecting <strong>{{ selectedEmp.firstName }} {{ selectedEmp.lastName }}</strong> will return
           the record to Admin for resubmission.
         }
       </p>
       <div class="field">
-        <label class="field-label">Note <span class="required">*</span></label>
-        <textarea pTextarea [(ngModel)]="dialogNote" rows="4"
-                  placeholder="Enter your approval note..."
+        <label [for]="noteId" class="field-label">Note <span class="required">*</span></label>
+        <textarea [id]="noteId" pTextarea [(ngModel)]="dialogNote" rows="4"
+                  [placeholder]="notePlaceholder"
                   style="width:100%;resize:vertical"></textarea>
       </div>
     </div>

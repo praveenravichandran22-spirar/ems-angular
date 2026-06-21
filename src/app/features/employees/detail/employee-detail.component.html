@@ -230,8 +230,9 @@
         <div class="workflow-body">
           <!-- Assign Reviewers -->
           <div class="workflow-field">
-            <label class="wf-label">Reviewers</label>
+            <label for="reviewerSelect" class="wf-label">Reviewers</label>
             <p-multiselect
+              inputId="reviewerSelect"
               [options]="reviewerOptions()"
               [(ngModel)]="selectedReviewerIds"
               optionLabel="displayName"
@@ -245,8 +246,9 @@
 
           <!-- Assign Approvers -->
           <div class="workflow-field">
-            <label class="wf-label">Approvers</label>
+            <label for="approverSelect" class="wf-label">Approvers</label>
             <p-multiselect
+              inputId="approverSelect"
               [options]="approverOptions()"
               [(ngModel)]="selectedApproverIds"
               optionLabel="displayName"
